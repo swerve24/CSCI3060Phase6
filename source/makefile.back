@@ -1,0 +1,7 @@
+all: run
+
+compile:
+	@javac -cp back_end/ back_end/*.java
+
+run: compile
+	@java -cp back_end/ backEnd old.mbaf trans-files/*.tf
