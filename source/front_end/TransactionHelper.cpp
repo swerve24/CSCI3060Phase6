@@ -1,6 +1,6 @@
-/* 
+/*
  * TransactionHelper.cpp
- * 
+ *
  * Authors: Denesh Parthipan, Luisa Rojas, Truyen Truong
  */
 
@@ -31,7 +31,7 @@ bool TransactionHelper::HolderExists(string name) {
   bool ret = false;
 
   for (int i = 0; i < users.size(); i++) {
-    if (((users.at(i).GetName()).compare(name)) == 0) {			
+    if (((users.at(i).GetName()).compare(name)) == 0) {
       ret = true;
       break;
     }
@@ -45,7 +45,7 @@ bool TransactionHelper::NumExists(int acc_num) {
   bool ret = false;
 
   for (int i = 0; i < users.size(); i++) {
-    if (users.at(i).GetNum() == acc_num) {			
+    if (users.at(i).GetNum() == acc_num) {
       ret = true;
       break;
     }
@@ -83,7 +83,7 @@ bool TransactionHelper::Matches(string name, int acc_num) {
   bool ret = false;
 
   for (int i = 0; i < users.size(); i++) {
-    if (((users.at(i).GetName()).compare(name)) == 0) {     
+    if (((users.at(i).GetName()).compare(name)) == 0) {
       if (users.at(i).GetNum() == acc_num) {
         ret = true;
         break;
@@ -97,7 +97,7 @@ bool TransactionHelper::Matches(string name, int acc_num) {
  * (e.g. formatting). Done using regex.
  */
 bool TransactionHelper::is_Amount_Valid(string amount) {
-  
+
   //Formats to be accepted: 5.50, 0.50, .50. Decimals are mandatory.
   regex re("[0-9]{0,5}\\.[0-9]{2}");
 
@@ -109,12 +109,12 @@ bool TransactionHelper::is_Amount_Valid(string amount) {
 
 // Checks if the account provided is active or disabled
 bool TransactionHelper::is_Disabled(int acc_num) {
-  
+
   bool ret = false;
 
   for (int i = 0; i < users.size(); i++) {
     if (((users.at(i).GetNum()) == acc_num)) {
-      string str;    
+      string str;
       if (users.at(i).GetStatus() == 'D') {
         ret = true;
         break;
@@ -128,12 +128,12 @@ bool TransactionHelper::is_Disabled(int acc_num) {
  * (student or non-student)
  */
 bool TransactionHelper::is_Student(int acc_num) {
-  
+
   bool ret = false;
 
   for (int i = 0; i < users.size(); i++) {
-    if (((users.at(i).GetNum()) == acc_num)) {  
-      string str;   
+    if (((users.at(i).GetNum()) == acc_num)) {
+      string str;
       if (users.at(i).GetPlan() == 'S') {
         ret = true;
         break;
@@ -146,11 +146,11 @@ bool TransactionHelper::is_Student(int acc_num) {
 /* Checks if the user was created recently
  */
 bool TransactionHelper::is_New(int acc_num) {
-  
+
   bool ret = false;
 
   for (int i = 0; i < new_users.size(); i++) {
-    if (new_users.at(i).GetNum() == acc_num) {     
+    if (new_users.at(i).GetNum() == acc_num) {
       ret = true;
       break;
     }
@@ -160,7 +160,7 @@ bool TransactionHelper::is_New(int acc_num) {
 
 // Outputs the transaction_file vector into a file
 void TransactionHelper::WriteTransactionFile() {
-  
+
   int i = 1;
 
   string file_name = "transaction_file_" + to_string(i) + ".tra";
@@ -196,17 +196,22 @@ void TransactionHelper::LoadAccounts(string file_name) {
   int acc_num;
   float acc_balance;
 
-  while (!infile.eof()) {
+  getline(infile, line);
+
+  while (1) {
 
     //line is in the format: NNNNN_AAAAAAAAAAAAAAAAAAAA_S_PPPPPPPP_Q
-    getline(infile, line);
 
     acc_holder = line.substr(6, 20);
     cout << acc_holder << endl;
-    strcpy(&acc_status, line.substr(27, 1).c_str());
-    strcpy(&acc_plan, line.substr(38, 1).c_str());
+
+
     acc_num = stoi(line.substr(0, 5));
+
+    strcpy(&acc_status, line.substr(27, 1).c_str());
     acc_balance = stof(line.substr(29, 8));
+    strcpy(&acc_plan, line.substr(38, 1).c_str());
+
 
     Standard u;
 
@@ -216,17 +221,24 @@ void TransactionHelper::LoadAccounts(string file_name) {
     u.SetStatus(acc_status);
     u.SetPlan(acc_plan);
     users.push_back(u);
+
+    getline(infile, line);
+
+    if(acc_holder == "END_OF_FILE         ")
+      break;
   }
+
+  infile.close();
 }
 
 void TransactionHelper::PrintWelcomeMessage() {
 
-cout << " __    __      _                           _ " << endl;           
-cout << "/ / /\\ \\ \\__ _| |_ ___ _ __ _ __ ___   ___| | ___  _ __ " << endl;  
-cout << "\\ \\/  \\/ / _` | __/ _ \\ '__| '_ ` _ \\ / _ \\ |/ _ \\| '_ \\" << endl;  
-cout << " \\  /\\  / (_| | ||  __/ |  | | | | | |  __/ | (_) | | | |" << endl;  
-cout << "  \\/  \\/ \\__,_|\\__\\___|_|  |_| |_| |_|\\___|_|\\___/|_| |_|" << endl;  
-                                                              
+cout << " __    __      _                           _ " << endl;
+cout << "/ / /\\ \\ \\__ _| |_ ___ _ __ _ __ ___   ___| | ___  _ __ " << endl;
+cout << "\\ \\/  \\/ / _` | __/ _ \\ '__| '_ ` _ \\ / _ \\ |/ _ \\| '_ \\" << endl;
+cout << " \\  /\\  / (_| | ||  __/ |  | | | | | |  __/ | (_) | | | |" << endl;
+cout << "  \\/  \\/ \\__,_|\\__\\___|_|  |_| |_| |_|\\___|_|\\___/|_| |_|" << endl;
+
   cout << "\nWelcome to Watermelon Banking System." << endl;
   cout << "Please log in to begin or enter \"help\" for more information.\n" << endl;
 }
@@ -299,9 +311,9 @@ void TransactionHelper::Login() {
           cout << "Transaction payment plan: Student" << endl;
         else if (curr_user.GetPlan() == 'N')
           cout << "Transaction payment plan: Non-student" << endl;
-        else 
-          cerr << "\n>>> ERROR: Could not get payment plan information.\n" << endl;     
-        
+        else
+          cerr << "\n>>> ERROR: Could not get payment plan information.\n" << endl;
+
         if (curr_user.GetStatus() == 'D')
           cout << "Status: Disabled" << endl;
         else if (curr_user.GetStatus() == 'A')
@@ -309,7 +321,7 @@ void TransactionHelper::Login() {
         else
           cerr << "\n>>> ERROR: Could not get status information.\n" << endl;
 
-        cout << "\nEnter a command.\n" << endl; 
+        cout << "\nEnter a command.\n" << endl;
 
         string transaction_line = "10 " + padded_acc_holder + " " + padded_acc_num + "          S ";
         transaction_file.push_back(transaction_line);
