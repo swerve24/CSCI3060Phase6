@@ -187,34 +187,35 @@ void TransactionHelper::WriteTransactionFile() {
  */
 void TransactionHelper::LoadAccounts(string file_name) {
 
-  ifstream infile(file_name);
+  ifstream infile;
+  infile.open(file_name);
 
+  string line; //holds each read in line from the file
   string acc_holder;
   char acc_status, acc_plan;
   int acc_num;
   float acc_balance;
 
-  if (infile) {
-    while (true) {
+  while (!infile.eof()) {
 
-      infile >> acc_num >> acc_holder >> acc_status >> acc_balance >> acc_plan;
-      Standard u;
+    //line is in the format: NNNNN_AAAAAAAAAAAAAAAAAAAA_S_PPPPPPPP_Q
+    getline(infile, line);
 
-      if(infile.eof())
-        break;
+    acc_holder = line.substr(6, 20);
+    cout << acc_holder << endl;
+    strcpy(&acc_status, line.substr(27, 1).c_str());
+    strcpy(&acc_plan, line.substr(38, 1).c_str());
+    acc_num = stoi(line.substr(0, 5));
+    acc_balance = stof(line.substr(29, 8));
 
-      u.SetName(acc_holder);
-      u.SetNum(acc_num);
-      u.SetBalance(acc_balance);
-      u.SetStatus(acc_status);
-      u.SetPlan(acc_plan);
-      users.push_back(u);
-    }
+    Standard u;
 
-    infile.close();
-  } else {
-    cerr << "\n>>> ERROR: File \"" << file_name << "\" was not found.\n" << endl;
-  exit(-1);
+    u.SetName(acc_holder);
+    u.SetNum(acc_num);
+    u.SetBalance(acc_balance);
+    u.SetStatus(acc_status);
+    u.SetPlan(acc_plan);
+    users.push_back(u);
   }
 }
 
