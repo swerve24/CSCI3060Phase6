@@ -17,9 +17,6 @@
 #include <iomanip>
 #include "Standard.h"
 
-#include <stdio.h>
-#include <string.h>
-
 using namespace std;
 
 class Standard;

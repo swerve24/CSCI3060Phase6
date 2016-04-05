@@ -196,22 +196,19 @@ void TransactionHelper::LoadAccounts(string file_name) {
   int acc_num;
   float acc_balance;
 
+  //line is in the format: NNNNN_AAAAAAAAAAAAAAAAAAAA_S_PPPPPPPP_Q
   getline(infile, line);
-
+  
   while (1) {
-
-    //line is in the format: NNNNN_AAAAAAAAAAAAAAAAAAAA_S_PPPPPPPP_Q
 
     acc_holder = line.substr(6, 20);
     cout << acc_holder << endl;
-
 
     acc_num = stoi(line.substr(0, 5));
 
     strcpy(&acc_status, line.substr(27, 1).c_str());
     acc_balance = stof(line.substr(29, 8));
     strcpy(&acc_plan, line.substr(38, 1).c_str());
-
 
     Standard u;
 
@@ -224,12 +221,13 @@ void TransactionHelper::LoadAccounts(string file_name) {
 
     getline(infile, line);
 
-    if(acc_holder == "END_OF_FILE         ")
+    if(line.substr(6, 20).compare("END_OF_FILE         ") == 0)
       break;
   }
 
   infile.close();
 }
+
 
 void TransactionHelper::PrintWelcomeMessage() {
 
