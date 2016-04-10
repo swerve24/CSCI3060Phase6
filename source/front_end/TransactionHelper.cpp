@@ -163,11 +163,11 @@ void TransactionHelper::WriteTransactionFile() {
 
   int i = 1;
 
-  string file_name = "transaction_file_" + to_string(i) + ".tra";
+  string file_name = "actual-trans-files/transaction_file_" + to_string(i) + ".tra";
 
   while (FileExists(file_name)) {
     i++;
-    file_name = "transaction_file_" + to_string(i) + ".tra";
+    file_name = "actual-trans-files/transaction_file_" + to_string(i) + ".tra";
   }
 
   ofstream outfile(file_name);
@@ -201,18 +201,17 @@ void TransactionHelper::LoadAccounts(string file_name) {
   
   while (1) {
 
-    acc_holder = line.substr(6, 20);
-    cout << acc_holder << endl;
-
-    acc_num = stoi(line.substr(0, 5));
-
-    strcpy(&acc_status, line.substr(27, 1).c_str());
-    acc_balance = stof(line.substr(29, 8));
-    strcpy(&acc_plan, line.substr(38, 1).c_str());
+    acc_holder = line.substr(6, 20); // Account holder
+    cout << "[From string]" << acc_holder << "." << endl;
+    acc_num = stoi(line.substr(0, 5)); // Account number
+    strcpy(&acc_status, line.substr(27, 1).c_str()); // Status
+    acc_balance = stof(line.substr(29, 8)); // Balance
+    strcpy(&acc_plan, line.substr(38, 1).c_str()); // Plan
 
     Standard u;
 
     u.SetName(acc_holder);
+    cout << "[From user object]" << acc_holder << "." << endl;
     u.SetNum(acc_num);
     u.SetBalance(acc_balance);
     u.SetStatus(acc_status);
@@ -226,6 +225,11 @@ void TransactionHelper::LoadAccounts(string file_name) {
   }
 
   infile.close();
+
+  cout << "Printing users vector:" << endl;
+  for (int i = 0; i < users.size(); i++) {
+    cout << "> " << users.at(i).GetName() << endl;
+  }
 }
 
 

@@ -53,6 +53,7 @@ int main (int argc, char *argv[]) {
     file_name = argv[1];
 
     transactions.LoadAccounts(file_name);
+    cout << "File name: " << file_name << "." << endl;
     transactions.PrintWelcomeMessage();
 
     // Permanently listening for commands
